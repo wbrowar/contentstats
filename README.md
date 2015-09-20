@@ -25,6 +25,9 @@ For each section, you can change these settings:
 ---
 
 ## Releases
+##### *1.0.1*
+* Added option to change widget column span
+
 ##### *1.0*
 * Initial release of Content Stats widget
 

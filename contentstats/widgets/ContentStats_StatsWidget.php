@@ -3,8 +3,6 @@ namespace Craft;
 
 class ContentStats_StatsWidget extends BaseWidget
 {
-  protected $colspan = 3;
-
   public function getName()
   {
       return Craft::t('Content Stats');
@@ -25,6 +23,7 @@ class ContentStats_StatsWidget extends BaseWidget
 			'showGroup' => AttributeType::Mixed,
 			'showSection' => AttributeType::Mixed,
 			'showStatus' => AttributeType::Mixed,
+			'colspan' => array(AttributeType::Mixed, 'default' => 3),
 		);
 	}
 	public function getSettingsHtml()
@@ -37,4 +36,14 @@ class ContentStats_StatsWidget extends BaseWidget
 			'settings' => $this->getSettings(),
 		));
 	}
+  public function getColspan()
+  {
+	  $colspan = 3;
+	  
+	  if (isset($this->getSettings()->colspan)) {
+		  $colspan = $this->getSettings()->colspan;
+	  }
+	  
+    return $colspan;
+  }
 }

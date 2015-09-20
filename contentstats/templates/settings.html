@@ -2,6 +2,14 @@
 
 {% set editableSections = craft.sections.getEditableSections() %}
 <div id="defaults">
+	{{ forms.selectField({
+		name: "colspan",
+		label: "Widget Size"|t,
+		instructions: "How many columns should this widget span?"|t,
+		options: {'1':'1','2':'2','3':'3','4':'4'},
+		value: (settings.colspan is defined and settings.colspan is not empty ? settings.colspan : 3),
+	}) }}
+	
 	<table class="data fullwidth">
 		<thead>
 			<th style="width:20%;">Section</th>
@@ -46,7 +54,6 @@
 	var jq = jQuery;
 	
 	function showStatSettings(s) {
-		console.log('chaningggg');
 		if (jq(s).find('.lightswitch').hasClass('on')) {
 			jq(s).parents('.stats_settings').find('.stat_setting *').show();
 		} else {
