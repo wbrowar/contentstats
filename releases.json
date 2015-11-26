@@ -1,0 +1,27 @@
+[
+  {
+    "version": "1.0.0",
+    "downloadUrl": "https://github.com/wbrowar/craft-content-stats/archive/master.zip",
+    "date": "2015-09-09T12:00:00-05:00",
+    "notes": [
+        "Initial release of Content Stats widget."
+    ]
+  },
+  {
+    "version": "1.0.1",
+    "downloadUrl": "https://github.com/wbrowar/craft-content-stats/archive/master.zip",
+    "date": "2015-09-20T12:00:00-05:00",
+    "notes": [
+        "[Added] Added option to change widget column span."
+    ]
+  },
+  {
+    "version": "1.0.2",
+    "downloadUrl": "https://github.com/wbrowar/craft-content-stats/archive/master.zip",
+    "date": "2015-11-26T13:00:00-05:00",
+    "notes": [
+        "[Added] ~Added option to change widget column span~ Nevermind, 2.5+ does this better.",
+        "[Improved] Re-organized repo to allow for easier `git` cloning."
+    ]
+  }
+]
