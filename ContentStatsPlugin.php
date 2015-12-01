@@ -9,7 +9,7 @@ class ContentStatsPlugin extends BasePlugin
 	}
 	public function getVersion()
 	{
-		return '1.0.2';
+		return '1.0.3';
 	}
 	public function getDescription()
 	{
@@ -25,11 +25,11 @@ class ContentStatsPlugin extends BasePlugin
 	}
 	public function getDocumentationUrl()
 	{
-		return 'https://github.com/wbrowar/craft-content-stats';
+		return 'https://github.com/wbrowar/contentstats';
 	}
 	public function getReleaseFeedUrl()
 	{
-		return 'https://raw.githubusercontent.com/wbrowar/craft-content-stats/master/releases.json';
+		return 'https://raw.githubusercontent.com/wbrowar/contentstats/master/releases.json';
 	}
 	public function hasCpSection()
 	{

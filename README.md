@@ -27,6 +27,6 @@ For each section, you can change these settings:
 
 ## Releases
 
-Release notes moved to [releases.json](https://github.com/wbrowar/craft-content-stats/blob/master/releases.json)
+Release notes moved to [releases.json](https://github.com/wbrowar/contentstats/blob/master/releases.json)
 
 Please, let me know if this plugin is useful or if you have any suggestions or issues. [@wbrowar](https://twitter.com/wbrowar)
