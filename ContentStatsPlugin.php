@@ -11,6 +11,10 @@ class ContentStatsPlugin extends BasePlugin
 	{
 		return '1.0.3';
 	}
+	public function getSchemaVersion()
+	{
+		return '1.0.0';
+	}
 	public function getDescription()
 	{
 		return 'See how many entries have been created for channels and structures in your Craft CMS website.';
