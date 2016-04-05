@@ -5,7 +5,15 @@ class ContentStats_StatsWidget extends BaseWidget
 {
   public function getName()
   {
-      return Craft::t('Content Stats');
+    $settings = $this->getSettings();
+    
+    if (isset($settings["headerTitle"]) && !empty($settings["headerTitle"])) {
+      $widgetTitle = $settings["headerTitle"];
+    } else {
+      $widgetTitle = 'Content Stats';
+    }
+    
+    return Craft::t($widgetTitle);
   }
 
   public function getBodyHtml()
@@ -18,10 +26,12 @@ class ContentStats_StatsWidget extends BaseWidget
 	protected function defineSettings()
 	{
 		return array(
+			'headerTitle' => AttributeType::Mixed,
 			'sectionHandle' => AttributeType::Mixed,
 			'sectionLabel' => AttributeType::Mixed,
 			'showGroup' => AttributeType::Mixed,
 			'showSection' => AttributeType::Mixed,
+			'showSectionType' => AttributeType::Mixed,
 			'showStatus' => AttributeType::Mixed,
 		);
 	}

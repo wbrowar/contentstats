@@ -2,62 +2,88 @@
 
 {% set editableSections = craft.sections.getEditableSections() %}
 <div id="defaults">
-	<table class="data fullwidth">
-		<thead>
-			<th style="width:20%;">Section</th>
-			<th style="width:10%;">Show Stats</th>
-			<th style="width:10%;">Status</th>
-			<th style="width:60%;">Section Label</th>
-		</thead>
-		{% for section in editableSections %}
-			{% if section.type == 'channel' or section.type == 'structure' %}
-				{% set handle = section.handle %}
-				<tr class="stats_settings">
-					<td>{{ section.name }}</td>
-					<td class="stat_switch">
-						{{ forms.lightswitch({
-							name: "showSection[" ~ handle ~ "]",
-							on: (settings.showSection[handle] is defined and settings.showSection[handle] is not empty ? settings.showSection[handle] : false),
-						}) }}
-					</td>
-					<td class="stat_setting">
-						{{ forms.select({
-							name: "showStatus[" ~ handle ~ "]",
-							options: {'live':'Live','disabled':'Disabled','pending':'Pending','expired':'Expired'},
-							value: (settings.showStatus[handle] is defined and settings.showStatus[handle] is not empty ? settings.showStatus[handle] : 'live'),
-						}) }}
-					</td>
-					<td class="stat_setting">
-						{{ forms.text({
-							name: "sectionLabel[" ~ handle ~ "]",
-							placeholder: section.name ~ ' Entries',
-							value: (settings.sectionLabel[handle] is defined and settings.sectionLabel[handle] is not empty ? settings.sectionLabel[handle] : ''),
-						}) }}
-					</td>
-					<input type="hidden" name="sectionHandle[{{ handle }}]" value="{{ handle }}">
-					<input type="hidden" name="showGroup[{{ handle }}]" value="0">
-				</tr>
-			{% endif %}
-		{% endfor %}
-	</table>
+  {{ forms.textField({
+    label: "Header",
+    name: "headerTitle",
+    placeholder: 'Content Stats',
+    value: (settings.headerTitle is defined and settings.headerTitle is not empty ? settings.headerTitle : ''),
+  }) }}
+
+  <table class="data fullwidth">
+    <thead>
+      <th style="width:20%;">Section</th>
+      <th style="width:10%;">Show Stats</th>
+      <th style="width:10%;">Status</th>
+      <th style="width:60%;">Section Label</th>
+    </thead>
+    {% for section in editableSections %}
+      {% set entryTypes = section.getEntryTypes() %}
+      
+      {% if section.type == 'channel' or section.type == 'structure' %}
+        {% set handle = section.handle %}
+        <tr class="stats_settings" data-section-handle="{{ section.handle }}">
+          <td>{{ section.name }}</td>
+          <td class="stat_switch">
+            {{ forms.lightswitch({
+              name: "showSection[" ~ handle ~ "]",
+              on: (settings.showSection[handle] is defined and settings.showSection[handle] is not empty ? settings.showSection[handle] : false),
+            }) }}
+          </td>
+          <td class="stat_setting">
+            {{ forms.select({
+              name: "showStatus[" ~ handle ~ "]",
+              options: {'live':'Live','disabled':'Disabled','pending':'Pending','expired':'Expired'},
+              value: (settings.showStatus[handle] is defined and settings.showStatus[handle] is not empty ? settings.showStatus[handle] : 'live'),
+            }) }}
+          </td>
+          <td class="stat_setting">
+            {{ forms.text({
+              name: "sectionLabel[" ~ handle ~ "]",
+              placeholder: section.name ~ ' Entries',
+              value: (settings.sectionLabel[handle] is defined and settings.sectionLabel[handle] is not empty ? settings.sectionLabel[handle] : ''),
+            }) }}
+          </td>
+          <input type="hidden" name="sectionHandle[{{ handle }}]" value="{{ handle }}">
+          <input type="hidden" name="showGroup[{{ handle }}]" value="0">
+        </tr>
+        {% if entryTypes|length > 1 %}
+          {% for type in entryTypes %}
+          <tr data-entry-types-for="{{ section.handle }}">
+            <td colspan="3" class="light">&nbsp;&nbsp;&nbsp;{{ type.name }}</td>
+            <td>
+              {{ forms.lightswitch({
+                name: "showSectionType[" ~ handle ~ "][" ~ type.handle ~ "]",
+                on: (settings.showSectionType[handle][type.handle] is defined and settings.showSectionType[handle][type.handle] is not empty ? settings.showSectionType[handle][type.handle] : false),
+              }) }}
+            </td>
+          </tr>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </table>
 </div>
 
 {% includejs %}
-	var jq = jQuery;
-	
-	function showStatSettings(s) {
-		if (jq(s).find('.lightswitch').hasClass('on')) {
-			jq(s).parents('.stats_settings').find('.stat_setting *').show();
-		} else {
-			jq(s).parents('.stats_settings').find('.stat_setting *').hide();
-		}
-	}
-	
-	jq('.stat_switch > .lightswitch').click(function() {
-		showStatSettings(jq(this).parent());
-	});
-	
-	jq('.stat_switch').each(function() {
-		showStatSettings(this);
-	});
+  var jq = jQuery;
+  
+  function showStatSettings(s) {
+    var handle = jq(s).parents('.stats_settings').attr('data-section-handle');
+
+    if (jq(s).find('.lightswitch').hasClass('on')) {
+      jq(s).parents('.stats_settings').find('.stat_setting *').show();
+      jq('[data-entry-types-for=' + handle + ']').show();
+    } else {
+      jq(s).parents('.stats_settings').find('.stat_setting *').hide();
+      jq('[data-entry-types-for=' + handle + ']').hide();
+    }
+  }
+  
+  jq('.stat_switch > .lightswitch').click(function() {
+    showStatSettings(jq(this).parent());
+  });
+  
+  jq('.stat_switch').each(function() {
+    showStatSettings(this);
+  });
 {% endincludejs %}

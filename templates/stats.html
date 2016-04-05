@@ -2,86 +2,136 @@
 {% set sectionHandles = settings.sectionHandle %}
 {% set sectionCount = 0 %}
 
-<h1 class="stats_group_title">Content</h1>
 <div class="stats_row">
-	{% for handle in sectionHandles %}
-		{% if settings.showSection[handle] == 1 %}
-			{% if settings.sectionLabel[handle] != '' %}
-				{% set label = settings.sectionLabel[handle] %}
-			{% else %}
-				{% set label = craft.sections.getSectionByHandle(handle).name ~ ' Entries' %}
-			{% endif %}
-			
-			<a class="stats_item" href="{{ url('entries/' ~ handle) }}">
-				<p>{{ craft.entries.section(handle).status(settings.showStatus[handle]).total() }}</p>
-				<h2>{{ label }}</h2>
-			</a>
-			
-			{% set sectionCount = sectionCount + 1 %}
-		{% endif %}
-	{% endfor %}
+  {% for handle in sectionHandles %}
+    {% if settings.showSection[handle] == 1 %}
+      {% set section = craft.sections.getSectionByHandle(handle) %}
+      
+      {% if settings.sectionLabel[handle]|length %}
+        {% set label = settings.sectionLabel[handle] %}
+      {% else %}
+        {% set label = section.name ~ ' Entries' %}
+      {% endif %}
+      
+      <a class="stats_item" href="{{ url('entries/' ~ handle) }}">
+        <p>{{ craft.entries.section(handle).status(settings.showStatus[handle]).total() }}</p>
+        <h2>{{ label }}</h2>
+        {% if settings.showSectionType[handle] is defined and settings.showSectionType[handle] is iterable %}
+          {% set typeSet = false %}
+          {% if settings.showSectionType[handle] %}
+            {% for key, typeHandle in settings.showSectionType[handle] %}
+              {% if typeHandle == 1 %}
+                {% if not typeSet %}
+                  {% set typeSet = true %}
+                  <table class="type">
+                {% endif %}
+
+                {% set entryTypeTotal = craft.entries.section(handle).type(key).status(settings.showStatus[handle]).total() %}
+                {% set entryTypes = section.getEntryTypes('handle') %}
+                {% set entryTypeName = entryTypes[key] %}
+                  <tr>
+                    <td class="total"><b>{{ entryTypeTotal }}</b></td>
+                    <td class="label" width="100%">{{ entryTypeName.name }}</td>
+                  </tr>
+                
+                {% if loop.last and typeSet %}
+                  </table>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      </a>
+      
+      {% set sectionCount = sectionCount + 1 %}
+    {% endif %}
+  {% endfor %}
 </div>
 
 {% if sectionCount == 0 %}
-	There are no stats to be shown. Edit the settings for this widget to enable stats.
+  There are no stats to be shown. Edit the settings for this widget to enable stats.
 {% endif %}
 {% endcache %}
 
 {% includecss %}
-	.widget.contentstats_stats .stats_group_title {
-		margin-bottom: 8px;
-		font-size: 1.3rem;
-	}
-	.widget.contentstats_stats .stats_row {
-		display: -webkit-flex;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-flex-flow: row wrap;
-		-ms-flex-flow: row wrap;
-		flex-flow: row wrap;
-		margin: 0 -5px 20px;
-	}
-	.widget.contentstats_stats .stats_row:last-child {
-		margin-bottom: 0;
-	}
-	.widget.contentstats_stats .stats_item {
-		display: -webkit-flex;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-flex-flow: column nowrap;
-		-ms-flex-flow: column nowrap;
-		flex-flow: column nowrap;
-		-webkit-justify-content: center;
-		-ms-flex-pack: center;
-		justify-content: center;
-		-webkit-flex: 1 1 110px;
-		-ms-flex: 1 1 110px;
-		flex: 1 1 110px;
-		margin: 0 5px 10px;
-		padding: 10px 20px;
-		background-color: rgb(235, 237, 239);
-		box-sizing: border-box;
-		text-align: center;
-		color: rgb(51, 63, 77);
-		transition: background .14s ease-out, color .14s ease-out;
-	}
-	.widget.contentstats_stats .stats_item:hover {
-		background-color: #e5e6e8;
-		text-decoration: none;
-		color: rgb(218, 91, 75);
-	}
-	.widget.contentstats_stats .stats_item > p {
-		display: block;
-		margin: 0 0 10px;
-		font-size: 2.6rem;
-		word-wrap: normal;
-		line-height: 1;
-	}
-	.widget.contentstats_stats .stats_item > h2 {
-		display: block;
-		text-transform: uppercase;
-		word-wrap: normal;
-		font-size: .75rem;
-		font-weight: normal;
-	}
+  .widget.contentstats_stats .front .pane > h2 {
+    margin-bottom: 15px;
+    font-family: HelveticaNeue-Light, HelveticaNeue, sans-serif;
+    font-size: 1.3rem;
+    font-weight: 100;
+    color: rgb(218, 91, 75);
+  }
+  .widget.contentstats_stats .stats_row {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    margin: 0 -5px 20px;
+  }
+  .widget.contentstats_stats .stats_row:last-child {
+    margin-bottom: 0;
+  }
+  .widget.contentstats_stats .stats_item {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: column nowrap;
+    -ms-flex-flow: column nowrap;
+    flex-flow: column nowrap;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-flex: 1 1 110px;
+    -ms-flex: 1 1 110px;
+    flex: 1 1 110px;
+    margin: 0 5px 10px;
+    padding: 10px 20px;
+    background-color: rgb(235, 237, 239);
+    box-sizing: border-box;
+    text-align: center;
+    color: rgb(51, 63, 77);
+    transition: background .14s ease-out, color .14s ease-out;
+  }
+  .widget.contentstats_stats .stats_item:hover {
+    background-color: #e5e6e8;
+    text-decoration: none;
+    color: rgb(218, 91, 75);
+  }
+  .widget.contentstats_stats .stats_item > p {
+    display: block;
+    margin: 0 0 10px;
+    font-size: 2.6rem;
+    word-wrap: normal;
+    line-height: 1;
+  }
+  .widget.contentstats_stats .stats_item > h2 {
+    display: block;
+    text-transform: uppercase;
+    word-wrap: normal;
+    font-size: .75rem;
+    font-weight: normal;
+  }
+  .widget.contentstats_stats .stats_item > .type {
+    padding-top: 10px;
+    width: 100%;
+    border-top: 1px solid rgba(51, 63, 77, 0.11);
+  }
+  .widget.contentstats_stats .stats_item:hover > .type {
+    border-top-color: rgba(218, 91, 75, 0.11);
+    transition: border .14s ease-out;
+  }
+  .widget.contentstats_stats .stats_item > .type td {
+    padding: 1px 0;
+  }
+  .widget.contentstats_stats .stats_item > .type .total {
+    padding-right: 5px;
+    text-align: right;
+    font-size: .9rem;
+  }
+  .widget.contentstats_stats .stats_item > .type .label {
+    font-size: .9rem;
+    text-transform: uppercase;
+  }
 {% endincludecss %}

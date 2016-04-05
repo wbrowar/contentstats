@@ -1,9 +1,7 @@
 # Craft – Content Stats
-See how much content you have per section, in [Craft CMS](https://buildwithcraft.com).
+See how much content you have per section, in [Craft CMS](https://craftcms.com).
 
 ![Screenshot](resources/screenshots/screenshot-widget.png)
-
-> one point oh!
 
 ## Installation
 1. Rename download folder to `contentstats`
