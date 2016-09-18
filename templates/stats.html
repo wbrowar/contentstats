@@ -7,43 +7,45 @@
     {% if settings.showSection[handle] == 1 %}
       {% set section = craft.sections.getSectionByHandle(handle) %}
       
-      {% if settings.sectionLabel[handle]|length %}
-        {% set label = settings.sectionLabel[handle] %}
-      {% else %}
-        {% set label = section.name ~ ' Entries' %}
-      {% endif %}
-      
-      <a class="stats_item" href="{{ url('entries/' ~ handle) }}">
-        <p>{{ craft.entries.section(handle).status(settings.showStatus[handle]).total() }}</p>
-        <h2>{{ label }}</h2>
-        {% if settings.showSectionType[handle] is defined and settings.showSectionType[handle] is iterable %}
-          {% set typeSet = false %}
-          {% if settings.showSectionType[handle] %}
-            {% for key, typeHandle in settings.showSectionType[handle] %}
-              {% if typeHandle == 1 %}
-                {% if not typeSet %}
-                  {% set typeSet = true %}
-                  <table class="type">
-                {% endif %}
-
-                {% set entryTypeTotal = craft.entries.section(handle).type(key).status(settings.showStatus[handle]).total() %}
-                {% set entryTypes = section.getEntryTypes('handle') %}
-                {% set entryTypeName = entryTypes[key] %}
-                  <tr>
-                    <td class="total"><b>{{ entryTypeTotal }}</b></td>
-                    <td class="label" width="100%">{{ entryTypeName.name }}</td>
-                  </tr>
-                
-                {% if loop.last and typeSet %}
-                  </table>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
+      {% if section|length %}
+        {% if settings.sectionLabel[handle]|length %}
+          {% set label = settings.sectionLabel[handle] %}
+        {% else %}
+          {% set label = section.name ~ ' Entries' %}
         {% endif %}
-      </a>
-      
-      {% set sectionCount = sectionCount + 1 %}
+        
+        <a class="stats_item" href="{{ url('entries/' ~ handle) }}">
+          <p>{{ craft.entries.section(handle).status(settings.showStatus[handle]).total() }}</p>
+          <h2>{{ label }}</h2>
+          {% if settings.showSectionType[handle] is defined and settings.showSectionType[handle] is iterable %}
+            {% set typeSet = false %}
+            {% if settings.showSectionType[handle] %}
+              {% for key, typeHandle in settings.showSectionType[handle] %}
+                {% if typeHandle == 1 %}
+                  {% if not typeSet %}
+                    {% set typeSet = true %}
+                    <table class="type">
+                  {% endif %}
+  
+                  {% set entryTypeTotal = craft.entries.section(handle).type(key).status(settings.showStatus[handle]).total() %}
+                  {% set entryTypes = section.getEntryTypes('handle') %}
+                  {% set entryTypeName = entryTypes[key] %}
+                    <tr>
+                      <td class="total"><b>{{ entryTypeTotal }}</b></td>
+                      <td class="label" width="100%">{{ entryTypeName.name }}</td>
+                    </tr>
+                  
+                  {% if loop.last and typeSet %}
+                    </table>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endif %}
+        </a>
+        
+        {% set sectionCount = sectionCount + 1 %}
+      {% endif %}
     {% endif %}
   {% endfor %}
 </div>
